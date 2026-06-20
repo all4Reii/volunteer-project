@@ -46,21 +46,33 @@
 <script>
 import { computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
+
 export default {
   name: 'HomeView',
   setup() {
     const store = useStore()
+
+    const user = computed(() => {
+      try {
+        return JSON.parse(localStorage.getItem('user') || '{}')
+      } catch (e) {
+        return {}
+      }
+    })
+
     onMounted(async () => {
       await store.dispatch('fetchActivities')
       await store.dispatch('fetchRankings')
     })
+
     const activities = computed(() => store.state.activities)
     const rankings = computed(() => store.state.rankings)
     const loading = computed(() => store.state.loading)
     const recentActivities = computed(() => activities.value.slice(0, 6))
     const topRankings = computed(() => rankings.value.slice(0, 5))
     const totalHours = computed(() => rankings.value.reduce((s, r) => s + r.totalHours, 0))
-    return { recentActivities, topRankings, totalHours, loading, activities }
+
+    return { recentActivities, topRankings, totalHours, loading, activities, user }
   }
 }
 </script>
