@@ -1,0 +1,468 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "志愿者小王",
+      "phone": "13900000001",
+      "password": "123456",
+      "email": "wang@test.com",
+      "avatar": "",
+      "joinDate": "2026-01-15"
+    },
+    {
+      "id": "2",
+      "name": "志愿者小李",
+      "phone": "13900000002",
+      "password": "123456",
+      "email": "li@test.com",
+      "avatar": "",
+      "joinDate": "2026-02-20"
+    },
+    {
+      "id": "3",
+      "name": "志愿者小张",
+      "phone": "13900000003",
+      "password": "123456",
+      "email": "zhang@test.com",
+      "avatar": "",
+      "joinDate": "2026-03-10"
+    }
+  ],
+  "activities": [
+    {
+      "id": "1",
+      "title": "社区环保志愿行动",
+      "description": "组织志愿者在社区进行垃圾分类宣传和环境卫生清理活动，提升居民环保意识。",
+      "region": "朝阳区",
+      "date": "2026-06-20",
+      "time": "09:00-12:00",
+      "location": "朝阳公园南门",
+      "maxVolunteers": 30,
+      "currentVolunteers": 18,
+      "status": "recruiting",
+      "category": "环保",
+      "image": "https://picsum.photos/seed/eco1/400/300",
+      "organizer": "张三",
+      "contactPhone": "13800001001",
+      "createdAt": "2026-06-01"
+    },
+    {
+      "id": "2",
+      "title": "敬老院关爱老人活动",
+      "description": "前往敬老院陪伴老人，帮忙打扫卫生、表演节目，为老人带去温暖和关爱。",
+      "region": "海淀区",
+      "date": "2026-06-22",
+      "time": "14:00-17:00",
+      "location": "海淀敬老院",
+      "maxVolunteers": 20,
+      "currentVolunteers": 12,
+      "status": "recruiting",
+      "category": "敬老",
+      "image": "https://picsum.photos/seed/elderly1/400/300",
+      "organizer": "李四",
+      "contactPhone": "13800001002",
+      "createdAt": "2026-06-02"
+    },
+    {
+      "id": "3",
+      "title": "山区支教助学活动",
+      "description": "前往山区小学进行为期一周的支教活动，教授英语、美术等课程。",
+      "region": "昌平区",
+      "date": "2026-07-01",
+      "time": "08:00-17:00",
+      "location": "昌平区希望小学",
+      "maxVolunteers": 15,
+      "currentVolunteers": 15,
+      "status": "full",
+      "category": "教育",
+      "image": "https://picsum.photos/seed/teach1/400/300",
+      "organizer": "王五",
+      "contactPhone": "13800001003",
+      "createdAt": "2026-06-03"
+    },
+    {
+      "id": "4",
+      "title": "城市马拉松志愿者服务",
+      "description": "为城市马拉松赛事提供引导、补给分发、医疗协助等志愿服务。",
+      "region": "东城区",
+      "date": "2026-07-05",
+      "time": "06:00-14:00",
+      "location": "东城体育中心",
+      "maxVolunteers": 50,
+      "currentVolunteers": 25,
+      "status": "recruiting",
+      "category": "赛事",
+      "image": "https://picsum.photos/seed/marathon1/400/300",
+      "organizer": "赵六",
+      "contactPhone": "13800001004",
+      "createdAt": "2026-06-05"
+    },
+    {
+      "id": "5",
+      "title": "图书馆整理志愿活动",
+      "description": "协助市图书馆进行图书分类、整理和上架工作，维护良好的阅读环境。",
+      "region": "西城区",
+      "date": "2026-06-25",
+      "time": "13:00-16:00",
+      "location": "西城区图书馆",
+      "maxVolunteers": 25,
+      "currentVolunteers": 8,
+      "status": "recruiting",
+      "category": "文化",
+      "image": "https://picsum.photos/seed/library1/400/300",
+      "organizer": "孙七",
+      "contactPhone": "13800001005",
+      "createdAt": "2026-06-04"
+    },
+    {
+      "id": "6",
+      "title": "交通文明劝导活动",
+      "description": "在主要路口进行交通文明劝导，协助维持交通秩序，倡导文明出行。",
+      "region": "朝阳区",
+      "date": "2026-06-28",
+      "time": "07:30-09:30",
+      "location": "朝阳大悦城路口",
+      "maxVolunteers": 20,
+      "currentVolunteers": 5,
+      "status": "recruiting",
+      "category": "交通",
+      "image": "https://picsum.photos/seed/traffic1/400/300",
+      "organizer": "周八",
+      "contactPhone": "13800001006",
+      "createdAt": "2026-06-06"
+    },
+    {
+      "id": "7",
+      "title": "动物救助站志愿服务",
+      "description": "前往动物救助站，协助工作人员喂养动物、打扫笼舍、遛狗等。",
+      "region": "海淀区",
+      "date": "2026-07-08",
+      "time": "09:00-16:00",
+      "location": "海淀动物救助中心",
+      "maxVolunteers": 15,
+      "currentVolunteers": 3,
+      "status": "recruiting",
+      "category": "动物保护",
+      "image": "https://picsum.photos/seed/animal1/400/300",
+      "organizer": "吴九",
+      "contactPhone": "13800001007",
+      "createdAt": "2026-06-07"
+    },
+    {
+      "id": "8",
+      "title": "社区义诊志愿服务活动",
+      "description": "联合社区医院开展免费义诊，为居民提供血压、血糖检测和健康咨询。",
+      "region": "丰台区",
+      "date": "2026-06-30",
+      "time": "08:00-12:00",
+      "location": "丰台区社区服务中心",
+      "maxVolunteers": 12,
+      "currentVolunteers": 4,
+      "status": "recruiting",
+      "category": "医疗",
+      "image": "https://picsum.photos/seed/medical1/400/300",
+      "organizer": "郑十",
+      "contactPhone": "13800001008",
+      "createdAt": "2026-06-08"
+    },
+    {
+      "id": "9",
+      "title": "旧衣回收环保行动",
+      "description": "收集旧衣物，分类整理后捐赠给贫困地区，倡导资源循环利用。",
+      "region": "朝阳区",
+      "date": "2026-07-12",
+      "time": "10:00-16:00",
+      "location": "朝阳各社区回收点",
+      "maxVolunteers": 40,
+      "currentVolunteers": 10,
+      "status": "recruiting",
+      "category": "环保",
+      "image": "https://picsum.photos/seed/recycle1/400/300",
+      "organizer": "冯十一",
+      "contactPhone": "13800001009",
+      "createdAt": "2026-06-09"
+    },
+    {
+      "id": "10",
+      "title": "青少年科技夏令营辅导",
+      "description": "担任青少年科技夏令营志愿者辅导员，指导孩子们进行科学实验和编程学习。",
+      "region": "海淀区",
+      "date": "2026-07-15",
+      "time": "08:30-17:30",
+      "location": "海淀科技馆",
+      "maxVolunteers": 20,
+      "currentVolunteers": 7,
+      "status": "recruiting",
+      "category": "教育",
+      "image": "https://picsum.photos/seed/science1/400/300",
+      "organizer": "陈十二",
+      "contactPhone": "13800001010",
+      "createdAt": "2026-06-10"
+    }
+  ],
+  "registrations": [
+    {
+      "id": "1",
+      "activityId": 1,
+      "userId": 1,
+      "userName": "志愿者小王",
+      "status": "approved",
+      "registerTime": "2026-06-10T10:00:00",
+      "phone": "13900000001"
+    },
+    {
+      "id": "2",
+      "activityId": 1,
+      "userId": 2,
+      "userName": "志愿者小李",
+      "status": "pending",
+      "registerTime": "2026-06-11T14:30:00",
+      "phone": "13900000002"
+    },
+    {
+      "id": "3",
+      "activityId": 2,
+      "userId": 1,
+      "userName": "志愿者小王",
+      "status": "approved",
+      "registerTime": "2026-06-12T09:00:00",
+      "phone": "13900000001"
+    },
+    {
+      "id": "4",
+      "activityId": 3,
+      "userId": 3,
+      "userName": "志愿者小张",
+      "status": "approved",
+      "registerTime": "2026-06-08T11:00:00",
+      "phone": "13900000003"
+    },
+    {
+      "activityId": "2",
+      "userId": "1",
+      "userName": "志愿者小王",
+      "phone": "13900000001",
+      "status": "pending",
+      "registerTime": "2026-06-20T16:05:25.077Z",
+      "id": "0biUyjiocDQ"
+    }
+  ],
+  "serviceRecords": [
+    {
+      "id": "1",
+      "userId": 1,
+      "userName": "志愿者小王",
+      "activityId": 1,
+      "activityTitle": "社区环保志愿行动",
+      "hours": 3,
+      "date": "2026-06-20",
+      "status": "completed",
+      "remark": "表现优秀"
+    },
+    {
+      "id": "2",
+      "userId": 1,
+      "userName": "志愿者小王",
+      "activityId": 2,
+      "activityTitle": "敬老院关爱老人活动",
+      "hours": 3,
+      "date": "2026-06-22",
+      "status": "completed",
+      "remark": ""
+    },
+    {
+      "id": "3",
+      "userId": 3,
+      "userName": "志愿者小张",
+      "activityId": 3,
+      "activityTitle": "山区支教助学活动",
+      "hours": 40,
+      "date": "2026-07-01",
+      "status": "approved",
+      "remark": "支教一周"
+    },
+    {
+      "id": "4",
+      "userId": 2,
+      "userName": "志愿者小李",
+      "activityId": 4,
+      "activityTitle": "城市马拉松志愿者服务",
+      "hours": 8,
+      "date": "2026-07-05",
+      "status": "pending",
+      "remark": ""
+    }
+  ],
+  "certificates": [
+    {
+      "id": "1",
+      "userId": 1,
+      "userName": "志愿者小王",
+      "activityId": 1,
+      "activityTitle": "社区环保志愿行动",
+      "totalHours": 3,
+      "issueDate": "2026-06-21",
+      "certNumber": "CERT-2026-0001"
+    },
+    {
+      "id": "2",
+      "userId": 1,
+      "userName": "志愿者小王",
+      "activityId": 2,
+      "activityTitle": "敬老院关爱老人活动",
+      "totalHours": 6,
+      "issueDate": "2026-06-23",
+      "certNumber": "CERT-2026-0002"
+    },
+    {
+      "id": "3",
+      "userId": 3,
+      "userName": "志愿者小张",
+      "activityId": 3,
+      "activityTitle": "山区支教助学活动",
+      "totalHours": 40,
+      "issueDate": "2026-07-08",
+      "certNumber": "CERT-2026-0003"
+    }
+  ],
+  "rankings": [
+    {
+      "id": "1",
+      "userId": 1,
+      "userName": "志愿者小王",
+      "totalHours": 66,
+      "rank": 1,
+      "activities": 5,
+      "avatar": ""
+    },
+    {
+      "id": "2",
+      "userId": 3,
+      "userName": "志愿者小张",
+      "totalHours": 55,
+      "rank": 2,
+      "activities": 4,
+      "avatar": ""
+    },
+    {
+      "id": "3",
+      "userId": 2,
+      "userName": "志愿者小李",
+      "totalHours": 38,
+      "rank": 3,
+      "activities": 3,
+      "avatar": ""
+    },
+    {
+      "id": "4",
+      "userId": 4,
+      "userName": "志愿者小刘",
+      "totalHours": 32,
+      "rank": 4,
+      "activities": 3,
+      "avatar": ""
+    },
+    {
+      "id": "5",
+      "userId": 5,
+      "userName": "志愿者小陈",
+      "totalHours": 28,
+      "rank": 5,
+      "activities": 2,
+      "avatar": ""
+    },
+    {
+      "id": "6",
+      "userId": 6,
+      "userName": "志愿者小赵",
+      "totalHours": 25,
+      "rank": 6,
+      "activities": 2,
+      "avatar": ""
+    },
+    {
+      "id": "7",
+      "userId": 7,
+      "userName": "志愿者小周",
+      "totalHours": 22,
+      "rank": 7,
+      "activities": 2,
+      "avatar": ""
+    },
+    {
+      "id": "8",
+      "userId": 8,
+      "userName": "志愿者小吴",
+      "totalHours": 18,
+      "rank": 8,
+      "activities": 1,
+      "avatar": ""
+    }
+  ],
+  "styles": [
+    {
+      "id": "1",
+      "activityId": 1,
+      "activityTitle": "社区环保志愿行动",
+      "title": "垃圾分类宣传活动圆满成功",
+      "description": "志愿者们深入社区，发放垃圾分类宣传手册，现场讲解分类知识，获得居民一致好评。",
+      "images": [
+        "https://picsum.photos/seed/style1a/600/400",
+        "https://picsum.photos/seed/style1b/600/400"
+      ],
+      "publishDate": "2026-06-21",
+      "author": "张三"
+    },
+    {
+      "id": "2",
+      "activityId": 2,
+      "activityTitle": "敬老院关爱老人活动",
+      "title": "暖心！敬老院里的欢声笑语",
+      "description": "志愿者们为老人表演了精彩的文艺节目，陪老人聊天、下棋，让老人们度过了愉快的一天。",
+      "images": [
+        "https://picsum.photos/seed/style2a/600/400",
+        "https://picsum.photos/seed/style2b/600/400"
+      ],
+      "publishDate": "2026-06-23",
+      "author": "李四"
+    },
+    {
+      "id": "3",
+      "activityId": 3,
+      "activityTitle": "山区支教助学活动",
+      "title": "山区孩子眼里的光——支教日记",
+      "description": "一周的支教时光虽然短暂，但孩子们对知识的渴望深深打动了每一位志愿者。",
+      "images": [
+        "https://picsum.photos/seed/style3a/600/400",
+        "https://picsum.photos/seed/style3b/600/400"
+      ],
+      "publishDate": "2026-07-08",
+      "author": "王五"
+    },
+    {
+      "id": "4",
+      "activityId": 4,
+      "activityTitle": "城市马拉松志愿者服务",
+      "title": "马拉松赛道上的蓝色身影",
+      "description": "50名志愿者凌晨4点集结，为参赛选手提供全方位服务保障，展现城市志愿者风采。",
+      "images": [
+        "https://picsum.photos/seed/style4a/600/400"
+      ],
+      "publishDate": "2026-07-06",
+      "author": "赵六"
+    },
+    {
+      "id": "5",
+      "activityId": 5,
+      "activityTitle": "图书馆整理志愿活动",
+      "title": "书香中的一抹志愿红",
+      "description": "志愿者们在图书馆认真整理图书，为读者营造整洁舒适的阅读空间。",
+      "images": [
+        "https://picsum.photos/seed/style5a/600/400"
+      ],
+      "publishDate": "2026-06-26",
+      "author": "孙七"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
