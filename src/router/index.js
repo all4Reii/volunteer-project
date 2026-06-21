@@ -22,8 +22,9 @@ const routes = [
   // =====================
   // 👑 管理员专属
   // =====================
-  { path: '/admin/registrations', name: 'AdminRegistrations', component: () => import('@/views/Admin/Registrations.vue'), meta: { title: '报名审核', requiresAuth: true, roles: ['admin'] } },
-  { path: '/admin/service-records', name: 'AdminServiceRecords', component: () => import('@/views/Admin/ServiceRecords.vue'), meta: { title: '服务时长管理', requiresAuth: true, roles: ['admin'] } },
+  { path: '/register', name: 'AdminRegistrations', component: () => import('@/views/Register/RegisterView.vue'), meta: { title: '报名审核', requiresAuth: true, roles: ['admin'] } },
+  { path: '/service-records', name: 'ServiceRecords', component: () => import('@/views/Register/ServiceRecords.vue'), meta: { title: '服务时长', requiresAuth: true, roles: ['admin'] } },
+  { path: '/service-records/manage', name: 'AdminServiceRecords', component: () => import('@/views/Register/ServiceRecords.vue'), meta: { title: '服务时长管理', requiresAuth: true, roles: ['admin'] } },
 
   // =====================
   // 公共页面

@@ -224,7 +224,7 @@
       "activityId": 1,
       "userId": 2,
       "userName": "志愿者小李",
-      "status": "pending",
+      "status": "approved",
       "registerTime": "2026-06-11T14:30:00",
       "phone": "13900000002"
     },
@@ -263,6 +263,15 @@
       "status": "pending",
       "registerTime": "2026-06-21T15:44:51.773Z",
       "id": "uh7Tez0DWX0"
+    },
+    {
+      "activityId": "2",
+      "userId": "1",
+      "userName": "志愿者小王",
+      "phone": "13900000001",
+      "status": "pending",
+      "registerTime": "2026-06-21T17:27:03.164Z",
+      "id": "QPKGqokjtHA"
     }
   ],
   "serviceRecords": [
@@ -309,6 +318,28 @@
       "date": "2026-07-05",
       "status": "pending",
       "remark": ""
+    },
+    {
+      "userId": 2,
+      "userName": "志愿者小李",
+      "activityId": 1,
+      "activityTitle": "社区环保志愿行动",
+      "hours": 0,
+      "date": "2026-06-21",
+      "status": "approved",
+      "remark": "",
+      "id": "2O0T7DlsrAY"
+    },
+    {
+      "userId": "1",
+      "userName": "管理员",
+      "activityId": 1,
+      "activityTitle": "",
+      "date": "",
+      "hours": 0,
+      "remark": "",
+      "status": "completed",
+      "id": "kszAkAomoYA"
     }
   ],
   "certificates": [
@@ -491,5 +522,6 @@
       "publishDate": "2026-06-26",
       "author": "孙七"
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }

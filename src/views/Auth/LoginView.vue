@@ -5,27 +5,69 @@
         <el-icon :size="40" color="#409eff"><Finished /></el-icon>
         <h2>{{ isLogin ? '欢迎回来' : '注册账号' }}</h2>
         <p>{{ isLogin ? '登录你的志愿者账号' : '加入志愿者大家庭' }}</p>
+        
+        <!-- 角色切换标签 -->
+        <div v-if="isLogin" style="margin-top: 12px;">
+          <el-radio-group v-model="loginRole" size="small" @change="onRoleChange">
+            <el-radio-button value="volunteer">🙋 志愿者</el-radio-button>
+            <el-radio-button value="admin">👑 管理员</el-radio-button>
+          </el-radio-group>
+        </div>
+        
+        <!-- 提示信息 -->
+        <div v-if="showHint" style="margin-top: 8px; font-size: 12px; color: #909399; background: #f5f7fa; padding: 8px; border-radius: 4px;">
+          <div v-if="loginRole === 'volunteer'">
+            💡 使用手机号登录（如：13900000001）
+          </div>
+          <div v-else>
+            👑 管理员账号：<strong>admin</strong> / 密码：<strong>123</strong>
+          </div>
+        </div>
       </div>
 
-      <el-form :model="form" :rules="rules" ref="formRef" label-width="0" size="large">
+      <el-form 
+        :model="form" 
+        :rules="rules" 
+        ref="formRef" 
+        label-width="0" 
+        size="large"
+        @keyup.enter="handleSubmit"
+      >
         <el-form-item prop="phone">
-          <el-input v-model="form.phone" placeholder="请输入账号（管理员：admin / 手机号用户）" :prefix-icon="Phone" />
+          <el-input 
+            v-model="form.phone" 
+            :placeholder="loginRole === 'admin' ? '请输入管理员账号' : '请输入手机号'" 
+            :prefix-icon="loginRole === 'admin' ? User : Phone"
+            clearable
+          />
         </el-form-item>
 
         <el-form-item v-if="!isLogin" prop="name">
-          <el-input v-model="form.name" placeholder="请输入姓名" :prefix-icon="User" />
+          <el-input v-model="form.name" placeholder="请输入姓名" :prefix-icon="User" clearable />
         </el-form-item>
 
         <el-form-item v-if="!isLogin" prop="email">
-          <el-input v-model="form.email" placeholder="请输入邮箱（选填）" :prefix-icon="Message" />
+          <el-input v-model="form.email" placeholder="请输入邮箱（选填）" :prefix-icon="Message" clearable />
         </el-form-item>
 
         <el-form-item prop="password">
-          <el-input v-model="form.password" type="password" placeholder="请输入密码" :prefix-icon="Lock" show-password />
+          <el-input 
+            v-model="form.password" 
+            type="password" 
+            placeholder="请输入密码" 
+            :prefix-icon="Lock" 
+            show-password
+          />
         </el-form-item>
 
         <el-form-item v-if="!isLogin" prop="confirmPassword">
-          <el-input v-model="form.confirmPassword" type="password" placeholder="确认密码" :prefix-icon="Lock" show-password />
+          <el-input 
+            v-model="form.confirmPassword" 
+            type="password" 
+            placeholder="确认密码" 
+            :prefix-icon="Lock" 
+            show-password
+          />
         </el-form-item>
 
         <el-form-item>
@@ -37,7 +79,7 @@
 
       <div class="login-footer">
         <span>{{ isLogin ? '还没有账号？' : '已有账号？' }}</span>
-        <el-link type="primary" @click="isLogin = !isLogin">
+        <el-link type="primary" @click="toggleMode">
           {{ isLogin ? '立即注册' : '去登录' }}
         </el-link>
       </div>
@@ -46,7 +88,7 @@
 </template>
 
 <script>
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter, useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
@@ -61,62 +103,117 @@ export default {
 
     const isLogin = ref(true)
     const loading = ref(false)
+    const loginRole = ref('volunteer') // 'volunteer' | 'admin'
+    const showHint = ref(true)
     const formRef = ref(null)
 
-    const form = reactive({ phone: '', password: '', name: '', email: '', confirmPassword: '' })
+    // 表单数据
+    const form = reactive({
+      phone: '',
+      password: '',
+      name: '',
+      email: '',
+      confirmPassword: ''
+    })
 
-    const rules = {
+    // 切换角色时清空表单
+    const onRoleChange = () => {
+      form.phone = ''
+      form.password = ''
+      formRef.value?.clearValidate()
+    }
+
+    // 验证规则
+    const rules = computed(() => ({
       phone: [
-        { required: true, message: '请输入账号', trigger: 'blur' }
+        { 
+          required: true, 
+          message: loginRole.value === 'admin' ? '请输入管理员账号' : '请输入手机号', 
+          trigger: 'blur' 
+        }
       ],
       password: [
         { required: true, message: '请输入密码', trigger: 'blur' },
         { min: 3, message: '密码至少3位', trigger: 'blur' }
       ],
-      name: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
-      confirmPassword: [
+      name: !isLogin.value ? [
+        { required: true, message: '请输入姓名', trigger: 'blur' }
+      ] : [],
+      email: !isLogin.value ? [
+        { type: 'email', message: '请输入正确的邮箱格式', trigger: 'blur' }
+      ] : [],
+      confirmPassword: !isLogin.value ? [
         {
           validator: (rule, value, callback) => {
-            if (value !== form.password) callback(new Error('两次密码不一致'))
-            else callback()
+            if (value !== form.password) {
+              callback(new Error('两次密码不一致'))
+            } else {
+              callback()
+            }
           },
           trigger: 'blur'
         }
-      ]
+      ] : []
+    }))
+
+    // 切换登录/注册模式
+    const toggleMode = () => {
+      isLogin.value = !isLogin.value
+      loginRole.value = 'volunteer'
+      showHint.value = true
+      // 清空表单
+      Object.keys(form).forEach(key => form[key] = '')
+      formRef.value?.clearValidate()
     }
 
+    // 提交表单
     const handleSubmit = async () => {
-      const valid = await formRef.value.validate().catch(() => false)
-      if (!valid) return
+      try {
+        await formRef.value?.validate()
+      } catch {
+        return
+      }
 
       loading.value = true
+
       try {
         if (isLogin.value) {
-          let role = 'volunteer'
-          let user = {}
+          // ========== 登录逻辑 ==========
+          let user = null
 
-          // admin rule
-          if (form.phone === 'admin' && form.password === '123') {
-            role = 'admin'
-            user = { name: '管理员', role }
+          if (loginRole.value === 'admin') {
+            // 👑 管理员登录 - 从 admins 数组验证
+            const res = await store.dispatch('adminLogin', {
+              phone: form.phone,
+              password: form.password
+            })
+            user = res
+            ElMessage.success('👑 管理员登录成功！')
           } else {
-            role = 'volunteer'
-            user = { name: form.phone, phone: form.phone, role }
+            // 🙋 普通用户登录 - 保持原有逻辑
+            const res = await store.dispatch('login', { 
+              phone: form.phone, 
+              password: form.password 
+            })
+            user = res || store.state.currentUser
+            
+            if (!user) {
+              throw new Error('登录失败，请检查账号或密码')
+            }
+            ElMessage.success('登录成功！')
           }
 
-          localStorage.setItem('user', JSON.stringify(user))
-
-          await store.dispatch('login', { phone: form.phone, password: form.password })
-
-          ElMessage.success('登录成功！')
+          // 跳转
           const redirect = route.query.redirect || '/'
           router.push(redirect)
+          
         } else {
+          // ========== 注册逻辑（保持不变） ==========
           await store.dispatch('register', {
             name: form.name,
             phone: form.phone,
             password: form.password,
-            email: form.email,
+            email: form.email || '',
             avatar: '',
             joinDate: new Date().toISOString().slice(0, 10)
           })
@@ -124,23 +221,94 @@ export default {
           ElMessage.success('注册成功！')
           router.push('/')
         }
-      } catch (e) {
-        ElMessage.error(e.message || '操作失败')
+      } catch (error) {
+        const message = error.response?.data?.message || error.message || '操作失败'
+        ElMessage.error(message)
       } finally {
         loading.value = false
       }
     }
 
-    return { isLogin, form, rules, formRef, loading, handleSubmit, Phone, User, Lock, Message, Finished }
+    return {
+      isLogin,
+      form,
+      rules,
+      formRef,
+      loading,
+      loginRole,
+      showHint,
+      onRoleChange,
+      handleSubmit,
+      toggleMode,
+      Phone,
+      User,
+      Lock,
+      Message,
+      Finished
+    }
   }
 }
 </script>
 
 <style scoped>
-.login-page { display: flex; justify-content: center; align-items: center; min-height: 70vh; }
-.login-card { width: 420px; border-radius: 12px; }
-.login-header { text-align: center; margin-bottom: 28px; }
-.login-header h2 { font-size: 22px; color: #303133; margin: 10px 0 4px; }
-.login-header p { font-size: 13px; color: #909399; }
-.login-footer { text-align: center; font-size: 13px; color: #909399; margin-top: 8px; }
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 70vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.login-card {
+  width: 420px;
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+.login-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.login-header h2 {
+  font-size: 22px;
+  color: #303133;
+  margin: 10px 0 4px;
+}
+
+.login-header p {
+  font-size: 13px;
+  color: #909399;
+}
+
+.login-footer {
+  text-align: center;
+  font-size: 13px;
+  color: #909399;
+  margin-top: 8px;
+}
+
+.login-footer .el-link {
+  font-size: 13px;
+  margin-left: 4px;
+}
+
+:deep(.el-radio-button__inner) {
+  padding: 6px 16px;
+  font-size: 13px;
+}
+
+:deep(.el-radio-button:first-child .el-radio-button__inner) {
+  border-radius: 4px 0 0 4px;
+}
+
+:deep(.el-radio-button:last-child .el-radio-button__inner) {
+  border-radius: 0 4px 4px 0;
+}
 </style>

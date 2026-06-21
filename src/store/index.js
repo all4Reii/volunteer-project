@@ -1,5 +1,9 @@
+// store/index.js
 import { createStore } from 'vuex'
-import { activityAPI, registrationAPI, serviceRecordAPI, certificateAPI, rankingAPI, styleAPI, authAPI } from '@/api'
+import { 
+  activityAPI, registrationAPI, serviceRecordAPI, 
+  certificateAPI, rankingAPI, styleAPI, authAPI 
+} from '@/api'
 
 export default createStore({
   state: {
@@ -14,9 +18,20 @@ export default createStore({
     isLoggedIn: false,
     loading: false
   },
+  
   mutations: {
-    SET_CURRENT_USER(state, user) { state.currentUser = user; state.isLoggedIn = !!user },
-    LOGOUT(state) { state.currentUser = null; state.isLoggedIn = false },
+    SET_CURRENT_USER(state, user) { 
+      state.currentUser = user
+      state.isLoggedIn = !!user
+      if (user) {
+        localStorage.setItem('user', JSON.stringify(user))
+      }
+    },
+    LOGOUT(state) { 
+      state.currentUser = null
+      state.isLoggedIn = false
+      localStorage.removeItem('user')
+    },
     SET_LOADING(state, val) { state.loading = val },
     SET_ACTIVITIES(state, list) { state.activities = list },
     SET_CURRENT_ACTIVITY(state, obj) { state.currentActivity = obj },
@@ -33,45 +48,118 @@ export default createStore({
     SET_RANKINGS(state, list) { state.rankings = list },
     SET_STYLES(state, list) { state.styles = list }
   },
+  
   actions: {
+    // 普通用户登录（保持原有逻辑不变）
     async login({ commit }, { phone, password }) {
       try {
         const res = await authAPI.login()
-        const users = res.data
+        const users = res.data || []
         const user = users.find(u => u.phone === phone)
+        
         if (!user || user.password !== password) {
           throw new Error('手机号或密码错误')
         }
-        commit('SET_CURRENT_USER', user)
-        return user
+        
+        // 添加角色标识
+        const userWithRole = {
+          ...user,
+          role: 'volunteer'
+        }
+        
+        commit('SET_CURRENT_USER', userWithRole)
+        return userWithRole
       } catch (e) {
         if (e.message === '手机号或密码错误') throw e
         throw new Error('网络请求失败，请检查服务是否启动')
       }
     },
+
+    // 👑 管理员登录（新增）
+    async adminLogin({ commit }, { phone, password }) {
+      try {
+        const res = await authAPI.getAdmins() // 需要新增这个 API 方法
+        const admins = res.data || []
+        
+        // 从 admins 数组中查找
+        const admin = admins.find(a => a.phone === phone)
+        
+        if (!admin || admin.password !== password) {
+          throw new Error('管理员账号或密码错误')
+        }
+        
+        // 构建管理员用户对象
+        const adminUser = {
+          id: admin.id,
+          name: admin.name,
+          phone: admin.phone,
+          role: 'admin',
+          email: admin.email || '',
+          avatar: admin.avatar || '',
+          token: 'admin_token_' + Date.now()
+        }
+        
+        commit('SET_CURRENT_USER', adminUser)
+        return adminUser
+      } catch (e) {
+        if (e.message === '管理员账号或密码错误') throw e
+        throw new Error('网络请求失败，请检查服务是否启动')
+      }
+    },
+
+    // 注册（保持不变）
     async register({ commit }, data) {
       const res = await authAPI.register(data)
-      commit('SET_CURRENT_USER', res.data)
-      return res.data
+      const newUser = {
+        ...res.data,
+        role: 'volunteer'
+      }
+      commit('SET_CURRENT_USER', newUser)
+      return newUser
     },
+
+    // 登出
     logout({ commit }) {
       commit('LOGOUT')
     },
+
+    // 从 localStorage 恢复登录状态
+    restoreSession({ commit }) {
+      const userStr = localStorage.getItem('user')
+      if (userStr) {
+        try {
+          const user = JSON.parse(userStr)
+          commit('SET_CURRENT_USER', user)
+          return true
+        } catch (e) {
+          return false
+        }
+      }
+      return false
+    },
+
+    // 其他 actions 保持不变...
     async fetchActivities({ commit }, params) {
       commit('SET_LOADING', true)
-      const res = await activityAPI.getList(params)
-      commit('SET_ACTIVITIES', res.data)
-      commit('SET_LOADING', false)
+      try {
+        const res = await activityAPI.getList(params)
+        commit('SET_ACTIVITIES', res.data || [])
+      } finally {
+        commit('SET_LOADING', false)
+      }
     },
     async fetchActivityById({ commit }, id) {
       commit('SET_LOADING', true)
-      const res = await activityAPI.getById(id)
-      commit('SET_CURRENT_ACTIVITY', res.data)
-      commit('SET_LOADING', false)
+      try {
+        const res = await activityAPI.getById(id)
+        commit('SET_CURRENT_ACTIVITY', res.data)
+      } finally {
+        commit('SET_LOADING', false)
+      }
     },
     async fetchRegistrations({ commit }, params) {
       const res = await registrationAPI.getList(params)
-      commit('SET_REGISTRATIONS', res.data)
+      commit('SET_REGISTRATIONS', res.data || [])
     },
     async submitRegistration({ commit }, data) {
       const res = await registrationAPI.create(data)
@@ -84,7 +172,7 @@ export default createStore({
     },
     async fetchServiceRecords({ commit }, params) {
       const res = await serviceRecordAPI.getList(params)
-      commit('SET_SERVICE_RECORDS', res.data)
+      commit('SET_SERVICE_RECORDS', res.data || [])
     },
     async addServiceRecord({ commit }, data) {
       const res = await serviceRecordAPI.create(data)
@@ -92,7 +180,7 @@ export default createStore({
     },
     async fetchCertificates({ commit }, params) {
       const res = await certificateAPI.getList(params)
-      commit('SET_CERTIFICATES', res.data)
+      commit('SET_CERTIFICATES', res.data || [])
     },
     async generateCertificate({ commit }, data) {
       const res = await certificateAPI.create(data)
@@ -100,11 +188,20 @@ export default createStore({
     },
     async fetchRankings({ commit }) {
       const res = await rankingAPI.getList()
-      commit('SET_RANKINGS', res.data)
+      commit('SET_RANKINGS', res.data || [])
     },
     async fetchStyles({ commit }) {
       const res = await styleAPI.getList()
-      commit('SET_STYLES', res.data)
+      commit('SET_STYLES', res.data || [])
     }
+  },
+  
+  getters: {
+    isLoggedIn: state => state.isLoggedIn,
+    currentUser: state => state.currentUser,
+    isAdmin: state => state.currentUser?.role === 'admin',
+    userName: state => state.currentUser?.name || '游客',
+    userRole: state => state.currentUser?.role || 'volunteer',
+    userId: state => state.currentUser?.id
   }
 })

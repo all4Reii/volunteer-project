@@ -77,5 +77,6 @@ export const styleAPI = {
 export const authAPI = {
   login: () => http.get('/users'),
   register: (data) => http.post('/users', data),
-  getUser: (id) => http.get(`/users/${id}`)
+  getUser: (id) => http.get(`/users/${id}`),
+  getAdmins: () => http.get('/admins') // 👑 新增：获取管理员列表
 }
