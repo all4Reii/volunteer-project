@@ -9,7 +9,7 @@
 
       <el-form :model="form" :rules="rules" ref="formRef" label-width="0" size="large">
         <el-form-item prop="phone">
-          <el-input v-model="form.phone" placeholder="请输入手机号" :prefix-icon="Phone" />
+          <el-input v-model="form.phone" placeholder="请输入账号（管理员：admin / 手机号用户）" :prefix-icon="Phone" />
         </el-form-item>
 
         <el-form-item v-if="!isLogin" prop="name">
@@ -58,6 +58,7 @@ export default {
     const store = useStore()
     const router = useRouter()
     const route = useRoute()
+
     const isLogin = ref(true)
     const loading = ref(false)
     const formRef = ref(null)
@@ -66,16 +67,14 @@ export default {
 
     const rules = {
       phone: [
-        { required: true, message: '请输入手机号', trigger: 'blur' },
-        { pattern: /^1[3-9]\d{9}$/, message: '手机号格式不正确', trigger: 'blur' }
+        { required: true, message: '请输入账号', trigger: 'blur' }
       ],
       password: [
         { required: true, message: '请输入密码', trigger: 'blur' },
-        { min: 6, message: '密码至少6位', trigger: 'blur' }
+        { min: 3, message: '密码至少3位', trigger: 'blur' }
       ],
       name: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
       confirmPassword: [
-        { required: true, message: '请确认密码', trigger: 'blur' },
         {
           validator: (rule, value, callback) => {
             if (value !== form.password) callback(new Error('两次密码不一致'))
@@ -93,7 +92,22 @@ export default {
       loading.value = true
       try {
         if (isLogin.value) {
+          let role = 'volunteer'
+          let user = {}
+
+          // admin rule
+          if (form.phone === 'admin' && form.password === '123') {
+            role = 'admin'
+            user = { name: '管理员', role }
+          } else {
+            role = 'volunteer'
+            user = { name: form.phone, phone: form.phone, role }
+          }
+
+          localStorage.setItem('user', JSON.stringify(user))
+
           await store.dispatch('login', { phone: form.phone, password: form.password })
+
           ElMessage.success('登录成功！')
           const redirect = route.query.redirect || '/'
           router.push(redirect)
@@ -106,6 +120,7 @@ export default {
             avatar: '',
             joinDate: new Date().toISOString().slice(0, 10)
           })
+
           ElMessage.success('注册成功！')
           router.push('/')
         }
