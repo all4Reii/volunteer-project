@@ -28,6 +28,15 @@
       "joinDate": "2026-03-10"
     }
   ],
+  "admins": [
+    {
+      "id": "1",
+      "name": "管理员",
+      "phone": "admin",
+      "password": "123",
+      "role": "admin"
+    }
+  ],
   "activities": [
     {
       "id": "1",
@@ -245,6 +254,15 @@
       "status": "pending",
       "registerTime": "2026-06-20T16:05:25.077Z",
       "id": "0biUyjiocDQ"
+    },
+    {
+      "activityId": "1",
+      "userId": "1",
+      "userName": "志愿者小王",
+      "phone": "13900000001",
+      "status": "pending",
+      "registerTime": "2026-06-21T15:44:51.773Z",
+      "id": "uh7Tez0DWX0"
     }
   ],
   "serviceRecords": [
@@ -473,6 +491,5 @@
       "publishDate": "2026-06-26",
       "author": "孙七"
     }
-  ],
-  "$schema": "./node_modules/json-server/schema.json"
+  ]
 }
