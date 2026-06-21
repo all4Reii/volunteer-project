@@ -9,7 +9,7 @@
 
       <el-form :model="form" :rules="rules" ref="formRef" label-width="0" size="large">
         <el-form-item prop="phone">
-          <el-input v-model="form.phone" placeholder="请输入账号（管理员：admin / 手机号用户）" :prefix-icon="Phone" />
+          <el-input v-model="form.phone" placeholder="请输入账号" :prefix-icon="Phone" />
         </el-form-item>
 
         <el-form-item v-if="!isLogin" prop="name">
@@ -47,15 +47,14 @@
 
 <script>
 import { ref, reactive } from 'vue'
-import { useStore } from 'vuex'
 import { useRouter, useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { Phone, User, Lock, Message, Finished } from '@element-plus/icons-vue'
+import { authAPI } from '@/api'
 
 export default {
   name: 'LoginView',
   setup() {
-    const store = useStore()
     const router = useRouter()
     const route = useRoute()
 
@@ -66,13 +65,8 @@ export default {
     const form = reactive({ phone: '', password: '', name: '', email: '', confirmPassword: '' })
 
     const rules = {
-      phone: [
-        { required: true, message: '请输入账号', trigger: 'blur' }
-      ],
-      password: [
-        { required: true, message: '请输入密码', trigger: 'blur' },
-        { min: 3, message: '密码至少3位', trigger: 'blur' }
-      ],
+      phone: [{ required: true, message: '请输入账号', trigger: 'blur' }],
+      password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
       name: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
       confirmPassword: [
         {
@@ -92,37 +86,34 @@ export default {
       loading.value = true
       try {
         if (isLogin.value) {
-          let role = 'volunteer'
-          let user = {}
+          const res = await authAPI.login(form.phone, form.password)
 
-          // admin rule
-          if (form.phone === 'admin' && form.password === '123') {
-            role = 'admin'
-            user = { name: '管理员', role }
-          } else {
-            role = 'volunteer'
-            user = { name: form.phone, phone: form.phone, role }
+          if (!res.data || res.data.length === 0) {
+            ElMessage.error('账号或密码错误')
+            return
           }
+
+          const user = res.data[0]
 
           localStorage.setItem('user', JSON.stringify(user))
 
-          await store.dispatch('login', { phone: form.phone, password: form.password })
-
           ElMessage.success('登录成功！')
+
           const redirect = route.query.redirect || '/'
           router.push(redirect)
         } else {
-          await store.dispatch('register', {
+          await authAPI.register({
             name: form.name,
             phone: form.phone,
             password: form.password,
             email: form.email,
             avatar: '',
-            joinDate: new Date().toISOString().slice(0, 10)
+            joinDate: new Date().toISOString().slice(0, 10),
+            role: 'volunteer'
           })
 
           ElMessage.success('注册成功！')
-          router.push('/')
+          isLogin.value = true
         }
       } catch (e) {
         ElMessage.error(e.message || '操作失败')
