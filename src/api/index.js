@@ -15,7 +15,9 @@ http.interceptors.request.use((config) => {
     if (user?.role) {
       config.headers['x-user-role'] = user.role
     }
-  } catch (e) {}
+  } catch (e) {
+    // ignore errors
+  }
   return config
 })
 
