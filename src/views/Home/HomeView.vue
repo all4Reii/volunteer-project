@@ -25,7 +25,7 @@
         </el-card>
       </el-col>
       <el-col :span="8">
-        <el-card header="🏆 志愿排行 TOP5" class="section-card">
+        <el-card header="志愿排行 TOP5" class="section-card">
           <div class="rank-mini" v-for="r in topRankings" :key="r.userId" @click="$router.push('/ranking')">
             <span class="rank-badge" :class="'rank-' + r.rank">{{ r.rank }}</span>
             <span class="rank-name">{{ r.userName }}</span>
@@ -33,7 +33,7 @@
           </div>
           <el-button link style="width:100%;margin-top:8px" @click="$router.push('/ranking')">查看完整排行 →</el-button>
         </el-card>
-        <el-card header="📋 服务统计" class="section-card">
+        <el-card header="服务统计" class="section-card">
           <el-statistic title="累计志愿活动" :value="activities.length" />
           <el-statistic title="注册志愿者" :value="topRankings.length" />
           <el-statistic title="总服务时长(h)" :value="totalHours" />
@@ -52,14 +52,6 @@ export default {
   setup() {
     const store = useStore()
 
-    const user = computed(() => {
-      try {
-        return JSON.parse(localStorage.getItem('user') || '{}')
-      } catch (e) {
-        return {}
-      }
-    })
-
     onMounted(async () => {
       await store.dispatch('fetchActivities')
       await store.dispatch('fetchRankings')
@@ -72,7 +64,7 @@ export default {
     const topRankings = computed(() => rankings.value.slice(0, 5))
     const totalHours = computed(() => rankings.value.reduce((s, r) => s + r.totalHours, 0))
 
-    return { recentActivities, topRankings, totalHours, loading, activities, user }
+    return { recentActivities, topRankings, totalHours, loading, activities }
   }
 }
 </script>

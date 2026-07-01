@@ -1,6 +1,6 @@
 <template>
   <div class="ranking-view">
-    <el-card header="🏆 志愿积分排行榜" v-loading="loading">
+    <el-card header="志愿积分排行榜" v-loading="loading">
       <el-table :data="rankings" border stripe :default-sort="{ prop: 'totalHours', order: 'descending' }" highlight-current-row>
         <el-table-column label="排名" width="80" align="center">
           <template #default="{ row }">
@@ -27,7 +27,7 @@
       </el-table>
     </el-card>
 
-    <el-card header="📊 统计概览" style="margin-top:20px">
+    <el-card header="统计概览" style="margin-top:20px">
       <el-row :gutter="24">
         <el-col :span="8">
           <el-statistic title="总志愿者数" :value="rankings.length" suffix="人" />

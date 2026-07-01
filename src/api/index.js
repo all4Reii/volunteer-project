@@ -4,8 +4,9 @@ const http = axios.create({
   baseURL: 'http://localhost:3001',
   timeout: 10000
 })
+//把 db.json 变成一个“REST API 后端服务器”,自动生成接口
 
-// attach auth + role
+// 每次请求自动携带登录 token 自动携带用户角色
 http.interceptors.request.use((config) => {
   try {
     const user = JSON.parse(localStorage.getItem('user') || '{}')
@@ -21,15 +22,6 @@ http.interceptors.request.use((config) => {
   return config
 })
 
-function requireAdmin() {
-  try {
-    const user = JSON.parse(localStorage.getItem('user') || '{}')
-    return user?.role === 'admin'
-  } catch (e) {
-    return false
-  }
-}
-
 export default http
 
 export const activityAPI = {
@@ -42,7 +34,6 @@ export const registrationAPI = {
   getList: (params) => http.get('/registrations', { params }),
   create: (data) => http.post('/registrations', data),
   update: (id, data) => {
-    if (!requireAdmin()) throw new Error('无权限：只有管理员可以审核报名')
     return http.patch(`/registrations/${id}`, data)
   }
 }
@@ -50,11 +41,9 @@ export const registrationAPI = {
 export const serviceRecordAPI = {
   getList: (params) => http.get('/serviceRecords', { params }),
   create: (data) => {
-    if (!requireAdmin()) throw new Error('无权限：只有管理员可以添加服务时长记录')
     return http.post('/serviceRecords', data)
   },
   update: (id, data) => {
-    if (!requireAdmin()) throw new Error('无权限：只有管理员可以修改服务时长记录')
     return http.patch(`/serviceRecords/${id}`, data)
   }
 }
@@ -66,7 +55,9 @@ export const certificateAPI = {
 }
 
 export const rankingAPI = {
-  getList: () => http.get('/rankings')
+  getList: () => http.get('/rankings'),
+  create: (data) => http.post('/rankings', data),
+  update: (id, data) => http.patch(`/rankings/${id}`, data)
 }
 
 export const styleAPI = {
@@ -75,8 +66,9 @@ export const styleAPI = {
 }
 
 export const authAPI = {
-  login: () => http.get('/users'),
+  login: (params) => http.get('/users', { params }),
   register: (data) => http.post('/users', data),
   getUser: (id) => http.get(`/users/${id}`),
-  getAdmins: () => http.get('/admins') // 👑 新增：获取管理员列表
+  getUsers: () => http.get('/users'),
+  getAdmins: () => http.get('/admins')
 }

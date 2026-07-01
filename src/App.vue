@@ -9,36 +9,59 @@
         <el-menu mode="horizontal" :default-active="activeMenu" router class="nav-menu">
           <el-menu-item index="/">首页</el-menu-item>
           <el-menu-item index="/activities">志愿活动</el-menu-item>
-          <el-menu-item index="/register">报名管理</el-menu-item>
-          <el-menu-item index="/service-records">服务时长</el-menu-item>
-          <el-menu-item index="/certificates">志愿证书</el-menu-item>
+          
+          <!-- 统一使用 /register，组件内部根据角色显示不同内容 -->
+          <el-menu-item index="/register">
+            {{ isAdmin ? '报名审核' : '报名管理' }}
+          </el-menu-item>
+          
+          <!-- 志愿者只能看到服务时长，管理员看到服务时长管理 -->
+          <el-menu-item index="/service-records">
+            {{ isAdmin ? '服务时长管理' : '我的服务时长' }}
+          </el-menu-item>
+          
+          <el-menu-item index="/certificates" v-if="!isAdmin">
+            志愿证书
+          </el-menu-item>
+          
           <el-menu-item index="/styles">活动风采</el-menu-item>
           <el-menu-item index="/ranking">志愿排行榜</el-menu-item>
         </el-menu>
+        
         <div class="user-info">
-          <template v-if="$store.state.isLoggedIn">
+          <template v-if="isLoggedIn">
+            <el-tag v-if="isAdmin" type="danger" size="small" style="margin-right: 12px;">
+              管理员
+            </el-tag>
             <el-dropdown trigger="click">
               <span class="user-dropdown">
                 <el-icon :size="18"><UserFilled /></el-icon>
-                {{ $store.state.currentUser?.name }}
+                {{ currentUser?.name || '用户' }}
                 <el-icon><ArrowDown /></el-icon>
               </span>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item disabled>{{ $store.state.currentUser?.phone }}</el-dropdown-item>
+                  <el-dropdown-item disabled>
+                    {{ currentUser?.phone || '未绑定手机' }}
+                  </el-dropdown-item>
+                  <el-dropdown-item v-if="isAdmin" disabled>
+                    角色：管理员
+                  </el-dropdown-item>
                   <el-dropdown-item divided @click="handleLogout">退出登录</el-dropdown-item>
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
           </template>
           <template v-else>
-            <el-button type="primary" size="small" @click="$router.push('/login')">登录 / 注册</el-button>
+            <el-button type="primary" size="middle" @click="$router.push('/login')">登录 / 注册</el-button>
           </template>
         </div>
       </el-header>
+      
       <el-main class="main-content">
         <router-view />
       </el-main>
+      
       <el-footer class="footer">
         <span>© 2026 志愿者服务平台 | 奉献、友爱、互助、进步</span>
       </el-footer>
@@ -47,23 +70,41 @@
 </template>
 
 <script>
-import { computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { ElMessage } from 'element-plus'
+import { Finished, UserFilled, ArrowDown } from '@element-plus/icons-vue'
+
 export default {
   name: 'App',
   setup() {
-    const route = useRoute()
     const router = useRouter()
     const store = useStore()
-    const activeMenu = computed(() => '/' + route.path.split('/')[1])
-    const handleLogout = () => {
-      store.dispatch('logout')
+
+    const isLoggedIn = computed(() => store.state.isLoggedIn)
+    const currentUser = computed(() => store.state.currentUser)
+    const isAdmin = computed(() => store.getters.isAdmin)
+
+    const handleLogout = async () => {
+      await store.dispatch('logout')
       ElMessage.success('已安全退出')
       router.push('/login')
     }
-    return { activeMenu, handleLogout }
+
+    onMounted(() => {
+      store.dispatch('restoreSession')
+    })
+
+    return {
+      isLoggedIn,
+      currentUser,
+      isAdmin,
+      handleLogout,
+      Finished,
+      UserFilled,
+      ArrowDown
+    }
   }
 }
 </script>

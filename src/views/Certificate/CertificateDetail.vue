@@ -17,7 +17,7 @@
             <el-divider />
             <p class="cert-date">颁发日期：{{ cert.issueDate }}</p>
             <p class="cert-org">志愿者服务平台 敬颁</p>
-            <el-button type="primary" style="margin-top:16px" @click="printCert">🖨️ 打印证书</el-button>
+            <el-button type="primary" style="margin-top:16px" @click="printCert">打印证书</el-button>
           </div>
         </div>
       </div>
@@ -38,7 +38,7 @@ export default {
 
     onMounted(async () => {
       loading.value = true
-      const res = await certificateAPI.getById(Number(props.id))
+      const res = await certificateAPI.getById(props.id)
       cert.value = res.data
       loading.value = false
     })

@@ -1,6 +1,6 @@
 <template>
   <div class="certificate-view">
-    <el-card header="🎖️ 我的证书">
+    <el-card header="我的证书">
       <el-row :gutter="20">
         <el-col :span="8" v-for="cert in myCertificates" :key="cert.id" style="margin-bottom:20px">
           <el-card shadow="hover" class="cert-card" @click="$router.push(`/certificate/${cert.id}`)">
@@ -49,7 +49,7 @@ import { ElMessage } from 'element-plus'
 export default {
   name: 'CertificateView',
   setup() {
-    const store = useStore()
+    const store = useStore() 
     const certForm = ref({ activityId: null, totalHours: 0, activityTitle: '' })
     const currentUserId = computed(() => store.state.currentUser?.id)
 
@@ -62,10 +62,10 @@ export default {
     })
 
     const myCertificates = computed(() =>
-      store.state.certificates.filter(c => c.userId == currentUserId.value)
+      store.state.certificates.filter(c => String(c.userId) === String(currentUserId.value))
     )
     const myRecords = computed(() =>
-      store.state.serviceRecords.filter(r => r.userId == currentUserId.value && r.status === 'completed')
+      store.state.serviceRecords.filter(r => String(r.userId) === String(currentUserId.value) && r.status === 'completed')
     )
 
     const totalMyHours = computed(() =>
@@ -84,7 +84,7 @@ export default {
     })
 
     const onActivityChange = (id) => {
-      const act = myActivities.value.find(a => a.id == id)
+      const act = myActivities.value.find(a => String(a.id) === String(id))
       if (act) {
         certForm.value.activityTitle = act.activityTitle
         certForm.value.totalHours = act.hours
@@ -96,10 +96,24 @@ export default {
         ElMessage.warning('请选择活动')
         return
       }
+
       if (certForm.value.totalHours <= 0) {
         ElMessage.warning('服务时长必须大于0')
         return
       }
+
+      // 关键：检查是否已存在证书
+      const exists = myCertificates.value.some(
+        c =>
+          String(c.userId) === String(currentUserId.value) &&
+          String(c.activityId) === String(certForm.value.activityId)
+      )
+
+      if (exists) {
+        ElMessage.warning('该活动证书已生成，请勿重复生成')
+        return
+      }
+
       await store.dispatch('generateCertificate', {
         userId: currentUserId.value,
         userName: store.state.currentUser?.name,
@@ -107,10 +121,20 @@ export default {
         activityTitle: certForm.value.activityTitle,
         totalHours: certForm.value.totalHours,
         issueDate: new Date().toISOString().slice(0, 10),
-        certNumber: 'CERT-' + new Date().getFullYear() + '-' + String(Math.floor(Math.random() * 9000 + 1000))
+        certNumber:
+          'CERT-' +
+          new Date().getFullYear() +
+          '-' +
+          String(Math.floor(Math.random() * 9000 + 1000))
       })
+
       ElMessage.success('证书生成成功！')
-      certForm.value = { activityId: null, totalHours: 0, activityTitle: '' }
+
+      certForm.value = {
+        activityId: null,
+        totalHours: 0,
+        activityTitle: ''
+      }
     }
 
     return { myCertificates, myRecords, totalMyHours, myActivities, certForm, onActivityChange, generateCert }

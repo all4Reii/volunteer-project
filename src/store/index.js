@@ -5,8 +5,10 @@ import {
   certificateAPI, rankingAPI, styleAPI, authAPI 
 } from '@/api'
 
+//数据仓库
 export default createStore({
   state: {
+    users: [],
     activities: [],
     currentActivity: null,
     registrations: [],
@@ -19,7 +21,11 @@ export default createStore({
     loading: false
   },
   
+  // mutations（唯一修改数据的方式）
   mutations: {
+    SET_USERS(state, list) {
+      state.users = list
+    },
     SET_CURRENT_USER(state, user) { 
       state.currentUser = user
       state.isLoggedIn = !!user
@@ -41,6 +47,13 @@ export default createStore({
       const idx = state.registrations.findIndex(r => r.id === id)
       if (idx !== -1) Object.assign(state.registrations[idx], data)
     },
+    //从 Vuex 的报名列表里删除一条记录
+    CANCEL_REGISTRATION(state, item) {
+      const index = state.registrations.findIndex(r => r.id === item.id)
+      if (index !== -1) {
+        state.registrations.splice(index, 1)
+      }
+    },
     SET_SERVICE_RECORDS(state, list) { state.serviceRecords = list },
     ADD_SERVICE_RECORD(state, item) { state.serviceRecords.unshift(item) },
     SET_CERTIFICATES(state, list) { state.certificates = list },
@@ -49,8 +62,9 @@ export default createStore({
     SET_STYLES(state, list) { state.styles = list }
   },
   
+  // 处理业务逻辑 + 异步请求
   actions: {
-    // 普通用户登录（保持原有逻辑不变）
+    // 志愿者登录
     async login({ commit }, { phone, password }) {
       try {
         const res = await authAPI.login()
@@ -75,7 +89,7 @@ export default createStore({
       }
     },
 
-    // 👑 管理员登录（新增）
+    // 管理员登录
     async adminLogin({ commit }, { phone, password }) {
       try {
         const res = await authAPI.getAdmins() // 需要新增这个 API 方法
@@ -107,7 +121,7 @@ export default createStore({
       }
     },
 
-    // 注册（保持不变）
+    // 注册
     async register({ commit }, data) {
       const res = await authAPI.register(data)
       const newUser = {
@@ -138,7 +152,11 @@ export default createStore({
       return false
     },
 
-    // 其他 actions 保持不变...
+    async fetchUsers({ commit }) {
+      const res = await authAPI.getUsers()
+      commit('SET_USERS', res.data || [])
+    },
+
     async fetchActivities({ commit }, params) {
       commit('SET_LOADING', true)
       try {
@@ -166,6 +184,11 @@ export default createStore({
       commit('ADD_REGISTRATION', res.data)
       return res.data
     },
+    async cancelRegistration({ commit }, { id, data }) {
+      const res = await registrationAPI.update(id, data)
+      commit('CANCEL_REGISTRATION', res.data)
+      return res.data
+    },
     async approveRegistration({ commit }, { id, data }) {
       const res = await registrationAPI.update(id, data)
       commit('UPDATE_REGISTRATION', { id, data: res.data })
@@ -174,9 +197,61 @@ export default createStore({
       const res = await serviceRecordAPI.getList(params)
       commit('SET_SERVICE_RECORDS', res.data || [])
     },
-    async addServiceRecord({ commit }, data) {
+    async addServiceRecord({ commit, state, dispatch }, data) {
+      dispatch('fetchRankings')
+      // ① 添加服务记录
       const res = await serviceRecordAPI.create(data)
+
       commit('ADD_SERVICE_RECORD', res.data)
+
+      // ② 查找排行榜用户
+      let ranking = state.rankings.find(
+        item => item.userId == data.userId
+      )
+
+      // ③ 已存在
+      if (ranking) {
+
+        await rankingAPI.update(ranking.id, {
+          totalHours: Number(ranking.totalHours) + Number(data.hours),
+          activities: Number(ranking.activities) + 1
+        })
+
+      } else {
+
+        // ④ 不存在则创建
+        await rankingAPI.create({
+          userId: data.userId,
+          userName: data.userName,
+          totalHours: Number(data.hours),
+          activities: 1,
+          rank: 999,
+          avatar: ''
+        })
+      }
+
+      // ⑤ 重新读取排行榜
+      const rankingRes = await rankingAPI.getList()
+
+      let rankings = rankingRes.data || []
+
+      // ⑥ 排序
+      rankings.sort(
+        (a, b) => b.totalHours - a.totalHours
+      )
+
+      // ⑦ 重算排名
+      for (let i = 0; i < rankings.length; i++) {
+
+        rankings[i].rank = i + 1
+
+        await rankingAPI.update(rankings[i].id, {
+          rank: i + 1
+        })
+      }
+
+      // ⑧ 刷新Vuex
+      dispatch('fetchRankings')
     },
     async fetchCertificates({ commit }, params) {
       const res = await certificateAPI.getList(params)
@@ -196,12 +271,14 @@ export default createStore({
     }
   },
   
+  //计算属性
   getters: {
     isLoggedIn: state => state.isLoggedIn,
     currentUser: state => state.currentUser,
     isAdmin: state => state.currentUser?.role === 'admin',
     userName: state => state.currentUser?.name || '游客',
     userRole: state => state.currentUser?.role || 'volunteer',
-    userId: state => state.currentUser?.id
+    userId: state => state.currentUser?.id,
+    users: state => state.users
   }
 })

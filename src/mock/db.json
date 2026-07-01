@@ -26,12 +26,21 @@
       "email": "zhang@test.com",
       "avatar": "",
       "joinDate": "2026-03-10"
+    },
+    {
+      "name": "王一",
+      "phone": "13800000000",
+      "password": "123456",
+      "email": "",
+      "avatar": "",
+      "joinDate": "2026-06-22",
+      "id": "uiX8SYgzsfo"
     }
   ],
   "admins": [
     {
       "id": "1",
-      "name": "管理员",
+      "name": "管理员1",
       "phone": "admin",
       "password": "123",
       "role": "admin"
@@ -247,31 +256,67 @@
       "phone": "13900000003"
     },
     {
-      "activityId": "2",
+      "id": "B51iQmrmbmk",
+      "activityId": "6",
       "userId": "1",
       "userName": "志愿者小王",
       "phone": "13900000001",
-      "status": "pending",
-      "registerTime": "2026-06-20T16:05:25.077Z",
-      "id": "0biUyjiocDQ"
+      "status": "cancelled",
+      "registerTime": "2026-06-22T09:20:37.848Z"
+    },
+    {
+      "activityId": "8",
+      "userId": "1",
+      "userName": "志愿者小王",
+      "phone": "13900000001",
+      "status": "approved",
+      "registerTime": "2026-06-22T13:58:25.300Z",
+      "id": "cDRHU2geKAo"
     },
     {
       "activityId": "1",
-      "userId": "1",
-      "userName": "志愿者小王",
-      "phone": "13900000001",
-      "status": "pending",
-      "registerTime": "2026-06-21T15:44:51.773Z",
-      "id": "uh7Tez0DWX0"
+      "userId": "uiX8SYgzsfo",
+      "userName": "王一",
+      "phone": "13800000000",
+      "status": "cancelled",
+      "registerTime": "2026-06-23T11:01:33.808Z",
+      "id": "7H8-FECjJm4"
     },
     {
-      "activityId": "2",
-      "userId": "1",
-      "userName": "志愿者小王",
-      "phone": "13900000001",
-      "status": "pending",
-      "registerTime": "2026-06-21T17:27:03.164Z",
-      "id": "QPKGqokjtHA"
+      "activityId": "1",
+      "userId": "uiX8SYgzsfo",
+      "userName": "王一",
+      "phone": "13800000000",
+      "status": "approved",
+      "registerTime": "2026-06-23T11:04:42.786Z",
+      "id": "pFrLoy0y3DA"
+    },
+    {
+      "activityId": "5",
+      "userId": "uiX8SYgzsfo",
+      "userName": "王一",
+      "phone": "13800000000",
+      "status": "rejected",
+      "registerTime": "2026-06-23T11:14:16.059Z",
+      "id": "J9h_GM7_NWA"
+    },
+    {
+      "activityId": "4",
+      "userId": "uiX8SYgzsfo",
+      "userName": "王一",
+      "phone": "13800000000",
+      "status": "cancelled",
+      "registerTime": "2026-06-23T13:09:36.044Z",
+      "id": "ZjczY5V7VI4"
+    },
+    {
+      "activityId": "4",
+      "userId": "uiX8SYgzsfo",
+      "userName": "王一",
+      "phone": "13800000000",
+      "status": "approved",
+      "registerTime": "2026-06-23T13:09:49.923Z",
+      "id": "ddO32fVL_gw"
     }
   ],
   "serviceRecords": [
@@ -279,7 +324,7 @@
       "id": "1",
       "userId": 1,
       "userName": "志愿者小王",
-      "activityId": 1,
+      "activityId": "1",
       "activityTitle": "社区环保志愿行动",
       "hours": 3,
       "date": "2026-06-20",
@@ -290,7 +335,7 @@
       "id": "2",
       "userId": 1,
       "userName": "志愿者小王",
-      "activityId": 2,
+      "activityId": "2",
       "activityTitle": "敬老院关爱老人活动",
       "hours": 3,
       "date": "2026-06-22",
@@ -298,48 +343,114 @@
       "remark": ""
     },
     {
-      "id": "3",
-      "userId": 3,
+      "userId": "3",
       "userName": "志愿者小张",
-      "activityId": 3,
-      "activityTitle": "山区支教助学活动",
-      "hours": 40,
-      "date": "2026-07-01",
-      "status": "approved",
-      "remark": "支教一周"
-    },
-    {
-      "id": "4",
-      "userId": 2,
-      "userName": "志愿者小李",
-      "activityId": 4,
+      "activityId": "4",
       "activityTitle": "城市马拉松志愿者服务",
-      "hours": 8,
-      "date": "2026-07-05",
-      "status": "pending",
-      "remark": ""
-    },
-    {
-      "userId": 2,
-      "userName": "志愿者小李",
-      "activityId": 1,
-      "activityTitle": "社区环保志愿行动",
-      "hours": 0,
-      "date": "2026-06-21",
-      "status": "approved",
-      "remark": "",
-      "id": "2O0T7DlsrAY"
-    },
-    {
-      "userId": "1",
-      "userName": "管理员",
-      "activityId": 1,
-      "activityTitle": "",
-      "date": "",
-      "hours": 0,
+      "date": "2026-06-09",
+      "hours": 3,
       "remark": "",
       "status": "completed",
-      "id": "kszAkAomoYA"
+      "id": "nBu5iDfVblQ"
+    },
+    {
+      "userId": "2",
+      "userName": "志愿者小李",
+      "activityId": "1",
+      "activityTitle": "社区环保志愿行动",
+      "date": "2026-07-02",
+      "hours": 0.5,
+      "remark": "",
+      "status": "completed",
+      "id": "SoT594tPUwg"
+    },
+    {
+      "userId": "uiX8SYgzsfo",
+      "userName": "王一",
+      "activityId": "1",
+      "activityTitle": "社区环保志愿行动",
+      "date": "2026-06-01",
+      "hours": 0.5,
+      "remark": "",
+      "status": "completed",
+      "id": "YkjcJSU6OdI"
+    },
+    {
+      "userId": "3",
+      "userName": "志愿者小张",
+      "activityId": "2",
+      "activityTitle": "敬老院关爱老人活动",
+      "date": "2026-06-22",
+      "hours": 3.5,
+      "remark": "",
+      "status": "completed",
+      "id": "FExPpxaDevQ"
+    },
+    {
+      "userId": "2",
+      "userName": "志愿者小李",
+      "activityId": "2",
+      "activityTitle": "敬老院关爱老人活动",
+      "date": "2026-06-22",
+      "hours": 1,
+      "remark": "",
+      "status": "completed",
+      "id": "ZqW864I8fGA"
+    },
+    {
+      "userId": "uiX8SYgzsfo",
+      "userName": "王一",
+      "activityId": "2",
+      "activityTitle": "敬老院关爱老人活动",
+      "date": "2026-06-22",
+      "hours": 0.5,
+      "remark": "",
+      "status": "completed",
+      "id": "wNn0iaGuTK4"
+    },
+    {
+      "userId": 1,
+      "userName": "志愿者小王",
+      "activityId": "7",
+      "activityTitle": "动物救助站志愿服务",
+      "date": "2026-07-08",
+      "hours": 5,
+      "remark": "",
+      "status": "completed",
+      "id": "uRf4ie1jVMI"
+    },
+    {
+      "userId": "uiX8SYgzsfo",
+      "userName": "王一",
+      "activityId": "6",
+      "activityTitle": "交通文明劝导活动",
+      "date": "2026-06-28",
+      "hours": 0.5,
+      "remark": "",
+      "status": "completed",
+      "id": "ru3yKQwdRnE"
+    },
+    {
+      "userId": "uiX8SYgzsfo",
+      "userName": "王一",
+      "activityId": "8",
+      "activityTitle": "社区义诊志愿服务活动",
+      "date": "2026-06-30",
+      "hours": 0.5,
+      "remark": "",
+      "status": "completed",
+      "id": "Bi16myWIr7s"
+    },
+    {
+      "userId": "uiX8SYgzsfo",
+      "userName": "王一",
+      "activityId": "4",
+      "activityTitle": "城市马拉松志愿者服务",
+      "date": "2026-07-05",
+      "hours": 1.5,
+      "remark": "",
+      "status": "completed",
+      "id": "0hctv01zsO8"
     }
   ],
   "certificates": [
@@ -359,7 +470,7 @@
       "userName": "志愿者小王",
       "activityId": 2,
       "activityTitle": "敬老院关爱老人活动",
-      "totalHours": 6,
+      "totalHours": 3,
       "issueDate": "2026-06-23",
       "certNumber": "CERT-2026-0002"
     },
@@ -374,14 +485,74 @@
       "certNumber": "CERT-2026-0003"
     },
     {
+      "userId": "uiX8SYgzsfo",
+      "userName": "王一",
+      "activityId": "2",
+      "activityTitle": "敬老院关爱老人活动",
+      "totalHours": 0.5,
+      "issueDate": "2026-06-23",
+      "certNumber": "CERT-2026-8459",
+      "id": "3DUvlnoqqsY"
+    },
+    {
+      "userId": "uiX8SYgzsfo",
+      "userName": "王一",
+      "activityId": "1",
+      "activityTitle": "社区环保志愿行动",
+      "totalHours": 0.5,
+      "issueDate": "2026-06-23",
+      "certNumber": "CERT-2026-9327",
+      "id": "ew6uU2FC4Jc"
+    },
+    {
       "userId": "1",
       "userName": "志愿者小王",
-      "activityId": 1,
-      "activityTitle": "社区环保志愿行动",
-      "totalHours": 3,
-      "issueDate": "2026-06-20",
-      "certNumber": "CERT-2026-1515",
-      "id": "6IdK_jJmnzw"
+      "activityId": "7",
+      "activityTitle": "动物救助站志愿服务",
+      "totalHours": 5,
+      "issueDate": "2026-06-23",
+      "certNumber": "CERT-2026-1734",
+      "id": "6N5H4d9hs-s"
+    },
+    {
+      "userId": 1,
+      "userName": "志愿者小王",
+      "activityId": "7",
+      "activityTitle": "动物救助站志愿服务",
+      "totalHours": 5,
+      "issueDate": "2026-06-23",
+      "certNumber": "CERT-2026-1873",
+      "id": "Ib1YKcuMMY4"
+    },
+    {
+      "userId": "1",
+      "userName": "志愿者小王",
+      "activityId": "7",
+      "activityTitle": "动物救助站志愿服务",
+      "totalHours": 5,
+      "issueDate": "2026-06-23",
+      "certNumber": "CERT-2026-6864",
+      "id": "CXf9EJnogzo"
+    },
+    {
+      "userId": "uiX8SYgzsfo",
+      "userName": "王一",
+      "activityId": "6",
+      "activityTitle": "交通文明劝导活动",
+      "totalHours": 0.5,
+      "issueDate": "2026-06-23",
+      "certNumber": "CERT-2026-4264",
+      "id": "qfhq2XYTa_0"
+    },
+    {
+      "userId": "uiX8SYgzsfo",
+      "userName": "王一",
+      "activityId": "8",
+      "activityTitle": "社区义诊志愿服务活动",
+      "totalHours": 0.5,
+      "issueDate": "2026-06-23",
+      "certNumber": "CERT-2026-1026",
+      "id": "Y66OpKysR18"
     }
   ],
   "rankings": [
@@ -389,9 +560,9 @@
       "id": "1",
       "userId": 1,
       "userName": "志愿者小王",
-      "totalHours": 66,
+      "totalHours": 71,
       "rank": 1,
-      "activities": 5,
+      "activities": 6,
       "avatar": ""
     },
     {
@@ -407,9 +578,9 @@
       "id": "3",
       "userId": 2,
       "userName": "志愿者小李",
-      "totalHours": 38,
+      "totalHours": 39,
       "rank": 3,
-      "activities": 3,
+      "activities": 4,
       "avatar": ""
     },
     {
@@ -449,13 +620,13 @@
       "avatar": ""
     },
     {
-      "id": "8",
-      "userId": 8,
-      "userName": "志愿者小吴",
-      "totalHours": 18,
+      "userId": "uiX8SYgzsfo",
+      "userName": "王一",
+      "totalHours": 3.5,
+      "activities": 5,
       "rank": 8,
-      "activities": 1,
-      "avatar": ""
+      "avatar": "",
+      "id": "p76IeeSfLRM"
     }
   ],
   "styles": [

@@ -30,7 +30,7 @@
         </el-card>
       </el-col>
       <el-col :span="10">
-        <el-card header="📝 报名参加">
+        <el-card v-if="!isAdmin" header="报名参加">
           <el-form :model="regForm" label-width="80px">
             <el-form-item label="姓名">
               <el-input v-model="regForm.userName" disabled />
@@ -51,6 +51,9 @@
             报名后请等待管理员审核，审核通过后将记录服务时长。
           </el-alert>
         </el-card>
+        <el-card v-else>
+          <el-empty description="管理员不可报名参与活动" />
+        </el-card>
       </el-col>
     </el-row>
   </div>
@@ -60,6 +63,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { useStore } from 'vuex'
 import { ElMessage } from 'element-plus'
+import { useRouter } from 'vue-router'
 
 export default {
   name: 'ActivityDetail',
@@ -75,10 +79,24 @@ export default {
     })
 
     onMounted(() => store.dispatch('fetchActivityById', Number(props.id)))
+    const isAdmin = computed(() => store.getters.isAdmin)
     const activity = computed(() => store.state.currentActivity)
     const loading = computed(() => store.state.loading)
+    const router = useRouter()
+    const currentUser = computed(() => store.state.currentUser)
+    const registrations = computed(() => store.state.registrations)
+
 
     const submitRegister = async () => {
+      if (hasRegistered.value) {
+        ElMessage.warning('您已报名该活动，请勿重复报名')
+        return
+      }
+      if (!currentUser.value) {
+        ElMessage.warning('请先登录')
+        router.push('/login')
+        return
+      }
       const data = {
         activityId: activity.value.id,
         userId: regForm.value.userId,
@@ -88,10 +106,21 @@ export default {
         registerTime: new Date().toISOString()
       }
       await store.dispatch('submitRegistration', data)
+      //console.log(data.id)
       ElMessage.success('报名成功，请等待审核！')
     }
 
-    return { activity, loading, regForm, submitRegister }
+    const hasRegistered = computed(() => {
+      if (!currentUser.value || !activity.value) return false
+
+      return registrations.value.some(r =>
+        String(r.userId) === String(currentUser.value.id) &&
+        String(r.activityId) === String(activity.value.id) &&
+        r.status !== 'cancelled'
+      )
+    })
+
+    return { activity, loading, regForm, submitRegister, hasRegistered ,isAdmin}
   }
 }
 </script>

@@ -4,24 +4,14 @@
       <div class="login-header">
         <el-icon :size="40" color="#409eff"><Finished /></el-icon>
         <h2>{{ isLogin ? '欢迎回来' : '注册账号' }}</h2>
-        <p>{{ isLogin ? '登录你的志愿者账号' : '加入志愿者大家庭' }}</p>
+        <!-- <p>{{ isLogin ? '登录你的志愿者账号' : '加入志愿者大家庭' }}</p> -->
         
         <!-- 角色切换标签 -->
         <div v-if="isLogin" style="margin-top: 12px;">
           <el-radio-group v-model="loginRole" size="small" @change="onRoleChange">
-            <el-radio-button value="volunteer">🙋 志愿者</el-radio-button>
-            <el-radio-button value="admin">👑 管理员</el-radio-button>
+            <el-radio-button value="volunteer">志愿者</el-radio-button>
+            <el-radio-button value="admin">管理员</el-radio-button>
           </el-radio-group>
-        </div>
-        
-        <!-- 提示信息 -->
-        <div v-if="showHint" style="margin-top: 8px; font-size: 12px; color: #909399; background: #f5f7fa; padding: 8px; border-radius: 4px;">
-          <div v-if="loginRole === 'volunteer'">
-            💡 使用手机号登录（如：13900000001）
-          </div>
-          <div v-else>
-            👑 管理员账号：<strong>admin</strong> / 密码：<strong>123</strong>
-          </div>
         </div>
       </div>
 
@@ -182,15 +172,15 @@ export default {
           let user = null
 
           if (loginRole.value === 'admin') {
-            // 👑 管理员登录 - 从 admins 数组验证
+            // 管理员登录 - 从 admins 数组验证
             const res = await store.dispatch('adminLogin', {
               phone: form.phone,
               password: form.password
             })
             user = res
-            ElMessage.success('👑 管理员登录成功！')
+            ElMessage.success('管理员登录成功！')
           } else {
-            // 🙋 普通用户登录 - 保持原有逻辑
+            // 普通用户登录
             const res = await store.dispatch('login', { 
               phone: form.phone, 
               password: form.password 
@@ -203,12 +193,12 @@ export default {
             ElMessage.success('登录成功！')
           }
 
-          // 跳转
+          // 跳转 登录成功后，如果用户是从某个页面被拦截来的，就回到原页面；否则就去首页
           const redirect = route.query.redirect || '/'
           router.push(redirect)
           
         } else {
-          // ========== 注册逻辑（保持不变） ==========
+          // ========== 注册逻辑==========
           await store.dispatch('register', {
             name: form.name,
             phone: form.phone,
